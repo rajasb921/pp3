@@ -89,13 +89,13 @@ class Tree{
             n++;
         }
         
-        // Add child, return position of child
-        Position addChild (Node<T>* parentNode, Node<T>* childNode){
+        // Add child, return node of child
+        Node<T> *addChild (Node<T>* parentNode, Node<T>* childNode){
             parentNode->childList.push_back(childNode);      // Add childNode to childList 
             childNode->parent = parentNode;                  // Update parent of childNode
 
             n++;
-            return Position(childNode);
+            return childNode;
         }
 
         // Preorder traversal
@@ -104,10 +104,23 @@ class Tree{
 
             if (Position(v).isExternal()){
                 return;
+            }else{
+                for (int i=0; i<v->childList.size(); i++){
+                    preorder(v->childList[i],pl);
+                }
             }
+        }
 
-            for (int i=0; i<v->childList.size(); i++){
-                return preorder(v->childList[i],pl);
+        // Preorder print
+        void preorderPrint(Node<T> *n){
+            std::cout << n->nodeLevel << "  " << n->nodeNum << "  " << n->label << "   " << n->data << "\n";
+
+            if (n->childList.size() == 0){
+                return;
+            }else{
+                for (int i=0; i<n->childList.size(); i++){
+                    preorderPrint(n->childList[i]);
+                }
             }
         }
 

@@ -9,11 +9,11 @@ int main(){
     Tree<std::string> t;
     std::cout << t.size() << "\n";
     
-
+    /*
     // Check add root
     t.addRoot("This is root","");
     std::cout << t.size() << "\n";
-    
+    */
 
     // Check add child
     /*
@@ -31,11 +31,22 @@ int main(){
     */
 
     // Check file to nodelist
-    std::vector<Node<std::string>*> nodeList = t.getNodeList("tree-car.txt");
-    // Print NodeList
-    for (int i=0; i<nodeList.size(); i++){
-        std::cout << nodeList[i]->data << "\n";
-    }
-    std::cout << "\n";
+    std::vector<Node<std::string>*> nodeList = t.getNodeList("tree-investment.txt");
+
+    // Check addChild and positions() using nodes from nodelist
+    t.addRoot(nodeList[0]->data,nodeList[0]->label);
+    Node<std::string> *l1 = t.addChild(t.rootNode(),nodeList[1]);
+    Node<std::string> *r1 = t.addChild(t.rootNode(),nodeList[2]);
+    Node<std::string> *l2 = t.addChild(r1,nodeList[3]);
+    Node<std::string> *r2 = t.addChild(r1,nodeList[4]);
+    Node<std::string> *l3 = t.addChild(r2,nodeList[5]);
+    Node<std::string> *r3 = t.addChild(r2,nodeList[6]);
+
+    std::cout << t.size() <<"\n\n";
+    /*
+    t.preorderPrint(t.rootNode());
+    */
+    t.positions();
+    t.printPositionList();
     return EXIT_SUCCESS;
 }
