@@ -6,334 +6,172 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
 
-// Each node will have  a label (yes/no) and left, middle, right and a parent
+// Node object
 template <typename T>
 struct Node{
-    T label;
-    T data;
-    Node *parent = nullptr;
-    Node *left = nullptr;
-    Node *middle = nullptr;
-    Node *right = nullptr;
-    int nodeNum;               // Number visited in preorder
-    int nodeLevel;             // Level of the node in the tree
-    bool isOpen = true;               // Can more children be added? (Open to add children)
+    int nodeLevel;                      // Level node is located (0 = root)
+    int nodeNum;                        // Number of node when visited in preorder
+    T data;                             // Data stored in node
+    T label;                            // Label used to reach node (yes,no,sometimes)
+    Node* parent;                       // Parent of node (root parent = nullptr)
+    std::vector<Node*> childList;       // List of children
 };
 
+// Tree class
 template <typename T>
 class Tree{
+    private:
+        Node<T> *root;                   // Root
+        int n;                           // Size of tree
     public:
-        // Position of a node in the tree
+
+        // Position class to keep track of the position of each node in the tree
         class Position{
             private:
-                Node<T> *v;
+                Node<T> *v;              // Node
             public:
-                Position(Node<T> *_v = NULL){           // Constructor
+                Position(Node<T> *_v = nullptr){         // Constructor
                     v = _v;
-                } 
-                T& operator*() { return v->data; }   // Dereference to get data
-
-                // Get left, middle, right child and parent
-                Position left() const{ return Position(v->left); }
-                Position middle() const{ return Position(v->middle); } 
-                Position right() const{ return Position(v->right); }
-                Position parent() const { return Position(v->parent); }
-
-                // Get label
-                T label() const { return v->label; }
-
-                // is root? is external?
-                bool isRoot() const { return v->parent == nullptr; }
-                bool isExternal() const {
-                    return v->left == nullptr && v->middle == nullptr && v->right == nullptr;
                 }
+                T &operator*() {return v->data;}         // Dereference to get data
+                Node<T> *getNode() {return v;}           // Return node
 
-                // Close node
-                void close() { v->isOpen = false;}
+                std::vector<Node<T>*> getChildren() const {return v->childList;}    // Return list of children
+                T label() const {return v->label;}                                  // Return label
+                bool isRoot() const {return v->parent == nullptr;}                  // is Root?
+                bool isExternal() const {return (v->childList.size() == 0);}        // is External?
 
                 friend class Tree;
         };
 
-        typedef std::vector<Position> PositionList;    // List of positions (stored as a vector)
+        typedef std::vector<Position> PositionList;               // List of all positions (stored in preorder)
 
-        Tree();                                      // Constructor
-        int size() const;                            // Number of node
-        bool empty() const;                          // Is tree empty?
-        Position root() const;                       // Get root position
-        Node<T>* rootNode() const;                    // Get root node
-        void addRoot(const T _data , const T _label);                 // Add root to tree 
-        
-        Position addLeft(const Position &p, const T _data , const T _label , const int _nodeNum);       // Add a node to the left of p, returns position of added node
-        Position addMiddle(const Position &p, const T _data , const T _label, const int _nodeNum);     // Add a node to the middle of p, returns position of added node
-        Position addRight(const Position &p, const T _data , const T _label, const int _nodeNum);      // Add a node  to the Right of p, returns position of added node
-
-        PositionList positions() const; // List of nodes
-        void printPositionList() const; // Prints details of each node in preorder format
-
-        // Expand external node
-        void expandExternal( const Position &p);
-
-        // Preorder Traversal
-        void preorder(Node<T> *v, PositionList &pl) const;
-
-        /* Functions needed to convert the textfile to a tree*/
-
-            // Given a node, find leftmost open node
-            Node<T>* nextOpen(Node<T> *n , bool checkMiddle);
-
-            // Check whether parent node is suitable
-            bool checkParent(Node<T> *parentNode , Node<T> *childNode);
-
-            // Add node to tree
-            void addToTree(Node<T> *childNode , Node<T> *rootNode);
-
-    private:
-        Node<T> *_root; // Pointer to root
-        int n; // Number of nodes
-};
-
-// Constructor
-template <typename T>
-Tree<T>::Tree() : _root(nullptr) , n(0) {}
-
-// Number of nodes
-template <typename T>
-int Tree<T>::size() const{
-    return n;
-}
-
-// Is tree empty?
-template <typename T>
-bool Tree<T>::empty() const{
-    return size() == 0;
-}
-
-// Get root position
-template <typename T>
-typename Tree<T>::Position Tree<T>::root() const{
-    return Position(_root);
-}
-
-// Get root node
-template <typename T>
-Node<T>* Tree<T>::rootNode() const{
-    return _root;
-}
-
-
-// Add root to empty tree
-template <typename T>
-void Tree<T>::addRoot(const T _data , const T _label) {
-    _root = new Node<T>;
-    _root->data = _data;
-    _root->label = _label;
-    _root->nodeNum = 1;
-    _root->nodeLevel = 0;
-    n += 1;
-}
-
-
-// Add node w to the left of p
-template <typename T>
-typename Tree<T>::Position Tree<T>::addLeft( const Position &p , const T _data , const T _label , const int _nodeNum){
-    Node<T> *v = p.v;
-
-    v->left = new Node<T>;
-    v->left->data = _data;
-    v->left->label = _label;
-    v->left->nodeNum = _nodeNum;
-    v->left->parent = v;
-    v->left->nodeLevel = v->nodeLevel + 1;
-
-    n++;
-
-    return Position(v->left);
-}
-
-// Add node w to the middle of p
-template <typename T>
-typename Tree<T>::Position Tree<T>::addMiddle( const Position &p ,  const T _data , const T _label , const int _nodeNum){
-    Node<T> *v = p.v;
-
-    v->middle = new Node<T>;
-    v->middle->data = _data;
-    v->middle->label = _label;
-    v->middle->nodeNum = _nodeNum;
-    v->middle->parent = v;
-    v->middle->nodeLevel = v->nodeLevel + 1;
-
-    n++;
-
-    return Position(v->middle);
-}
-
-// Add node w to the right of p
-template <typename T>
-typename Tree<T>::Position Tree<T>::addRight( const Position &p ,  const T _data , const T _label , const int _nodeNum){
-    Node<T> *v = p.v;
-
-    v->right = new Node<T>;
-    v->right->data = _data;
-    v->right->label = _label;
-    v->right->nodeNum = _nodeNum;
-    v->right->parent = v;
-    v->right->nodeLevel = v->nodeLevel + 1;
-
-    n++;
-
-    return Position(v->right);
-}
-
-// List of all Nodes
-template <typename T>
-typename Tree<T>::PositionList Tree<T>::positions() const{
-    PositionList pl;
-    preorder(_root,pl);
-    return pl;
-}
-
-// Prints details of each node in preorder format
-template <typename T>
-void Tree<T>::printPositionList() const{
-    PositionList pl = positions();
-    for (int i=0; i<pl.size(); i++){
-        Position p = pl[i];
-        Node<T> *n = p.v;
-        std::cout << n->nodeLevel << "  " << n->nodeNum << "  " << n->label << "   " << n->data << "\n";
-    }
-}
-
-// Preorder traversal
-template <typename T>
-void Tree<T>::preorder(Node<T> *v, PositionList &pl) const{
-    pl.push_back(Position(v));
-
-    // Traverse Left subtree
-    if (v->left != nullptr){
-        preorder(v->left,pl);
-    }
-
-    // Traverse Middle subtree
-    if (v->middle != nullptr){
-        preorder(v->middle,pl);
-    }
-
-    // Traverse Right subtree
-    if (v->right != nullptr){
-        preorder(v->right,pl);
-    }
-
-    return;
-}
-
-// Expand external node
-template <typename T>
-void Tree<T>::expandExternal(const Position &p){
-    Node<T> *v = p.v;   // p's node
-
-    v->left = new Node<T>;               // Add left child
-    v->left->parent = v;              // v is parent
-
-    v->middle = new Node<T>;               // Add middle child
-    v->middle->parent = v;              // v is parent
-
-    v->right = new Node<T>;               // Add right child
-    v->right->parent = v;              // v is parent
-
-    n += 3;
-}
-
-
-// Given a node, find leftmost open node
-template <typename T>
-Node<T>* Tree<T>::nextOpen(Node<T> *n , bool checkMiddle){
-    std::cout << "FINDING NEXT OPEN...\n";
-
-    Position p = Position(n);
-    if (p.isExternal()){
-        std::cout << "External Node\n";
-        return n;
-    }
-
-    // Check left node
-    if (n->left->isOpen){
-        return nextOpen(n->left,checkMiddle);
-    }
-
-
-    // Left closed, Check middle node (only if checkMiddle == true)
-    if (checkMiddle == true){
-        if (n->middle == nullptr){
-            return n;
-        }else if (n->middle->isOpen){
-            return nextOpen(n->middle,checkMiddle);
+        // Constructor
+        Tree(){
+            root = nullptr;
+            n = 0;
         }
-    }
 
-    // Middle closed OR Left closed
-    if (n->right == nullptr){
-        return n;
-    }else if (n->right->isOpen){
-        return nextOpen(n->right,checkMiddle);
-    }
+        // Get size
+        int size(){
+            return n;
+        }
 
-    // Error case
-    std::cout << "ERROR IN FINDING NEXT OPEN NODE!!\n";
-    return nullptr;
-}
+        // is Empty?
+        bool isEmpty(){
+            return size() == 0;
+        }
 
-// Check whether parent node is suitable
-template <typename T>
-bool Tree<T>::checkParent(Node<T> *parentNode , Node<T> *childNode){
+        // Return position of root
+        Position rootPosition() const{
+            return Position(root);
+        }
 
-    if (parentNode->nodeLevel != (childNode->nodeLevel - 1)){
-        parentNode->isOpen = false;
-        return false;
-    }
+        // Return root node
+        Node<T>* rootNode() const{
+            return root;
+        }
 
-    return true;
-}
+        // Add root
+        void addRoot(const T _data, const T _label){
+            Node <T> *newRoot  = new Node<T>;
+            newRoot->data = _data;
+            newRoot->label = _label;
+            newRoot->nodeLevel = 0;             // Root at level 0
+            newRoot->nodeNum = 1;               // Root visited first in preorder
+            newRoot->parent = nullptr;          // Root parent is nullptr
 
-// Add node to tree
-template <typename T>
-void Tree<T>::addToTree(Node<T> *childNode, Node<T> *rootNode){
-    bool correctParent = false;                  // Flag
-    
-    Node<T> *parentNode;                     // Store node of parent
-    bool checkMiddle;                     
-    if (childNode->label == "Sometimes"){   // If middle node should be checked
-        checkMiddle = true;
-    }else{
-        checkMiddle = false;
-    }
+            root = newRoot;
+            n++;
+        }
+        
+        // Add child, return position of child
+        Position addChild (Node<T>* parentNode, Node<T>* childNode){
+            parentNode->childList.push_back(childNode);      // Add childNode to childList 
+            childNode->parent = parentNode;                  // Update parent of childNode
 
-    // Find correct parent
-    while (correctParent == false){
-        parentNode = nextOpen(rootNode,checkMiddle);
-        correctParent = checkParent(parentNode,childNode);
-    }
+            n++;
+            return Position(childNode);
+        }
 
-    Position parentPos = Position(parentNode);
+        // Preorder traversal
+        void preorder(Node<T> *v, PositionList &pl){
+            pl.push_back(Position(v));
 
-    if (childNode->label == "Yes"){
-        addLeft(parentPos,childNode->data,childNode->label,childNode->nodeNum);
-        return;
-    }
+            if (Position(v).isExternal()){
+                return;
+            }
 
-    if (childNode->label == "Sometimes"){
-        addMiddle(parentPos,childNode->data,childNode->label,childNode->nodeNum);
-        return;
-    }
+            for (int i=0; i<v->childList.size(); i++){
+                return preorder(v->childList[i],pl);
+            }
+        }
 
-    if (childNode->label == "No"){
-        addRight(parentPos,childNode->data,childNode->label,childNode->nodeNum);
-        return;
-    }
+        // Create positionList
+        PositionList positions(){
+            PositionList pl;
+            preorder(rootNode(),pl);
+            return pl;
+        }
 
-    std::cout << "ERROR WHILE ADDING NODE!!\n";
-    return;
+        // Print details of each node in position list
+        void printPositionList(){
+            PositionList pl = positions();
+            for (int i=0; i<pl.size(); i++){
+                Node<T> *n = pl[i].getNode();
+                std::cout << n->nodeLevel << "  " << n->nodeNum << "  " << n->label << "   " << n->data << "\n"; 
+            }
+        }
 
-}
+        // Get list of nodes given a filename
+        std::vector<Node<T>*> getNodeList(std::string filename){
+            // opening file
+            std::ifstream myFile;
+            myFile.open(filename);
+
+
+            // Variables
+            std::string levelStr;
+            std::string nodeStr;
+            std::string label;
+            std::string data;
+            int numLevel;
+            int numNode;
+
+            // Nodelist
+            std::vector<Node<std::string>*> NodeList;
+
+            // Add to Nodelist
+            std::string line;
+            while (std::getline(myFile,line)){
+                // To read tab separated values
+                std::istringstream tab_string(line);
+
+                std::getline(tab_string,levelStr,'\t');
+                numLevel = std::stoi(levelStr);
+
+                std::getline(tab_string,nodeStr,'\t');
+                numNode = std::stoi(nodeStr);
+
+                std::getline(tab_string, label, '\t');
+                std::getline(tab_string, data, '\n');
+
+                Node<std::string> *n = new Node<std::string>;
+                n->data = data;
+                n->label = label;
+                n->nodeLevel = numLevel;
+                n->nodeNum = numNode;
+
+                NodeList.push_back(n);
+            }
+
+            return NodeList;
+        }
+
+};
 
 #endif
