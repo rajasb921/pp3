@@ -42,6 +42,8 @@ class Tree{
 
                 std::vector<Node<T>*> getChildren() const {return v->childList;}    // Return list of children
                 T label() const {return v->label;}                                  // Return label
+                int getNodeLevel() const {return v->nodeLevel;}                     // Return node level
+                int getNodeNum() const {return v->nodeNum;}                         // Return node number
                 bool isRoot() const {return v->parent == nullptr;}                  // is Root?
                 bool isExternal() const {return (v->childList.size() == 0);}        // is External?
 
@@ -183,6 +185,116 @@ class Tree{
             }
 
             return NodeList;
+        }
+
+        /* -------------------------------------
+           Functions to add from nodelist here
+        ---------------------------------------*/
+
+        // Return content of root
+        T rootData() const{
+            return root->data;
+        }
+
+        // Return number of internal nodes
+        int numInternalNodes(){
+            int count = 0;
+            PositionList pl = positions();
+            for (int i=0; i<pl.size(); i++){
+                if(pl[i].isExternal() == false){
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        // Return number of external nodes
+        int numExternalNodes(){
+            int count = 0;
+            PositionList pl = positions();
+            for (int i=0; i<pl.size(); i++){
+                if(pl[i].isExternal() == true){
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        // Return tree height
+        int height(){
+            int maxHeight = 0;
+            PositionList pl = positions();
+            for (int i=0; i<pl.size(); i++){
+                if(pl[i].getNodeLevel() > maxHeight){
+                    maxHeight = pl[i].getNodeLevel();
+                }
+            }
+
+            return maxHeight;
+        }
+
+        // is Binary?
+        bool isBinary(){
+            bool binary = true;
+            PositionList pl = positions();
+            for (int i=0; i<pl.size(); i++){
+                if (pl[i].getChildren().size() > 2){
+                    binary = false;
+                    break;
+                }
+            }
+            return binary;
+        }
+
+
+        // is Proper?
+        bool isProper(){
+            bool proper = true;
+            if (isBinary() == false){
+                return false;
+            }else{
+                PositionList pl = positions();
+                for (int i=0; i<pl.size(); i++){
+                    if (pl[i].isExternal()){
+                        continue;
+                    }
+                    
+                    if (pl[i].getChildren().size() != 2){
+                        proper = false;
+                        break;
+                    }
+                }
+            }
+            return proper;
+        }
+
+        // is Perfect?
+        bool isPerfect(){
+            bool perfect = true;
+            if (isBinary() == false){
+                return false;
+            }else if (isProper() == false){
+                return false;
+            }else{
+                PositionList pl = positions();
+                int height;
+                for (int i=0; i<pl.size(); i++){
+                    if (pl[i].isExternal()){
+                        height = pl[i].getNodeLevel();
+                        break;
+                    }
+                }
+
+                for (int i=0; i<pl.size(); i++){
+                    if (pl[i].isExternal() && pl[i].getNodeLevel() != height){
+                        perfect = false;
+                        break;
+                    }
+                }
+            }
+            return perfect;
         }
 
 };

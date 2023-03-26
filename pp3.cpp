@@ -48,5 +48,12 @@ int main(){
     */
     t.positions();
     t.printPositionList();
+
+    std::cout << t.height() << "\n";
+    std::cout << t.numInternalNodes() <<"\n";
+    std::cout << t.numExternalNodes() << "\n";
+    std::cout << t.isBinary() << "\n";
+    std::cout << t.isProper() << "\n";
+    std::cout << t.isPerfect() << "\n";
     return EXIT_SUCCESS;
 }
