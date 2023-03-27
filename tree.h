@@ -19,6 +19,7 @@ struct Node{
     T label;                            // Label used to reach node (yes,no,sometimes)
     Node* parent;                       // Parent of node (root parent = nullptr)
     std::vector<Node*> childList;       // List of children
+    bool isAdded = false;               // If node has been added to the tree (NEEDED FOR ADD FUNCTION)
 };
 
 // Tree class
@@ -79,14 +80,7 @@ class Tree{
         }
 
         // Add root
-        void addRoot(const T _data, const T _label){
-            Node <T> *newRoot  = new Node<T>;
-            newRoot->data = _data;
-            newRoot->label = _label;
-            newRoot->nodeLevel = 0;             // Root at level 0
-            newRoot->nodeNum = 1;               // Root visited first in preorder
-            newRoot->parent = nullptr;          // Root parent is nullptr
-
+        void addRoot(Node<T> *newRoot){
             root = newRoot;
             n++;
         }
@@ -187,9 +181,56 @@ class Tree{
             return NodeList;
         }
 
-        /* -------------------------------------
-           Functions to add from nodelist here
-        ---------------------------------------*/
+        /* --------------------------------------
+           ALGORITHM TO CREATE TREE FROM NODELIST
+           --------------------------------------*/
+
+        void addFromNodeList (Node<T>* parentNode , std::vector<Node<T>*> nodeList , int j){
+            
+            // Create possible parents list
+            std::vector<Node<T>*> parentList;
+            for (int i=j; i<nodeList.size(); i++){
+                if (nodeList[i]->nodeLevel == parentNode->nodeLevel){
+                    parentList.push_back(nodeList[i]);
+                }
+            }
+
+            // Create possible children list
+            std::vector<Node<T>*> childrenList;
+            for (int i=0; i<nodeList.size(); i++){
+                if ((nodeList[i]->nodeLevel == parentNode->nodeLevel+1) && (nodeList[i]->isAdded == false)){
+                    childrenList.push_back(nodeList[i]);
+                }
+            }
+
+            // If only one possible parent
+            if (parentList.size() == 1){
+                if (childrenList.size() == 0){
+                    return;
+                }else{
+                    for (int i = 0; i<childrenList.size(); i++){
+                        parentNode->childList.push_back(childrenList[i]);
+                        childrenList[i]->parent = parentNode;
+                        childrenList[i]->isAdded = true;
+                        n++;
+                    }
+                    return;
+                }
+            }
+
+            // More than one parent
+            int nextParentNum = parentList[1]->nodeNum;
+            for (int i=0; i<childrenList.size(); i++){
+                if (childrenList[i]->nodeNum > nextParentNum){
+                    return;
+                }else{
+                    parentNode->childList.push_back(childrenList[i]);
+                    childrenList[i]->parent = parentNode;
+                    childrenList[i]->isAdded = true;
+                    n++;
+                }
+            }
+        }
 
         // Return content of root
         T rootData() const{
