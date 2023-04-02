@@ -4,35 +4,38 @@
 #include "tree.h"
 
 int main(){
-
     // Create tree
-    Tree<std::string> t;
-    std::cout << "Initial tree size: " << t.size() << "\n";
-    
+    std::string filename;
+    std::cout << "\nEnter the filename of the tree: ";
+    std::cin >> filename;
+    Tree<std::string> tree = tree.createTree(filename);
+    std::cout << "Tree created!\n";
 
-    // Create nodeList
-    std::vector<Node<std::string>*> nodeList = t.getNodeList("tree-investment.txt");
+
+    // Create output file
+
     
-    
-    // addtotree
-    t.addRoot(nodeList[0]);
-    for (int i = 0; i<nodeList.size(); i++){
-        Node<std::string>* parent = nodeList[i];
-        t.addFromNodeList(parent,nodeList,i);
+    // Interact with tree;
+    int MAX_N  = tree.size();
+    std::cout << "-----------------\nEXPLORE THE TREE\n-----------------\n\n";
+
+    bool flag = true;
+    std::string option;
+
+    while(flag){
+        std::cout << "Which node would you like to explore? (Enter a position as a number or \"exit\" to exit the program):  ";
+        std::cin >> option;
+
+        if (option == "exit"){
+            std::cout << "Goodbye!\n\n";
+            flag = false;
+        }else{
+            int optionNum = std::stoi(option);
+            if (optionNum > MAX_N || optionNum == 0){
+                std::cout << "Invalid Input. Please try again.\n\n";
+            }else{
+                tree.printNode(optionNum);
+            }
+        }
     }
-
-    // Check tree details
-    std::cout << "Tree size now: " <<t.size() <<"\n\n";
-    std::cout << "Preorder print:\n ";
-    t.positions();
-    t.printPositionList();
-    std::cout << "\n";
-    std::cout << "Tree height: " <<t.height() << "\n";
-    std::cout << "Number of internal nodes: " << t.numInternalNodes() <<"\n";
-    std::cout << "Number of external nodes: " << t.numExternalNodes() << "\n";
-    std::cout << "is Binary?: " << t.isBinary() << "\n";
-    std::cout << "is Proper?: " << t.isProper() << "\n";
-    std::cout << "is Perfect?: " << t.isPerfect() << "\n";
-
-    return EXIT_SUCCESS;
 }

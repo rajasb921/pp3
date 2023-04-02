@@ -38,9 +38,9 @@ class Tree{
                 Position(Node<T> *_v = nullptr){         // Constructor
                     v = _v;
                 }
-                T &operator*() {return v->data;}         // Dereference to get data
-                Node<T> *getNode() {return v;}           // Return node
-
+                T &operator*() {return v->data;}            // Dereference to get data
+                Node<T> *getNode() {return v;}              // Return node
+                Node<T> *getParent() {return v->parent;}    // Get parent of node
                 std::vector<Node<T>*> getChildren() const {return v->childList;}    // Return list of children
                 T label() const {return v->label;}                                  // Return label
                 int getNodeLevel() const {return v->nodeLevel;}                     // Return node level
@@ -85,14 +85,6 @@ class Tree{
             n++;
         }
         
-        // Add child, return node of child
-        Node<T> *addChild (Node<T>* parentNode, Node<T>* childNode){
-            parentNode->childList.push_back(childNode);      // Add childNode to childList 
-            childNode->parent = parentNode;                  // Update parent of childNode
-
-            n++;
-            return childNode;
-        }
 
         // Preorder traversal
         void preorder(Node<T> *v, PositionList &pl){
@@ -132,7 +124,16 @@ class Tree{
             PositionList pl = positions();
             for (int i=0; i<pl.size(); i++){
                 Node<T> *n = pl[i].getNode();
-                std::cout << n->nodeLevel << "  " << n->nodeNum << "  " << n->label << "   " << n->data << "\n"; 
+                if (i==0){
+                    std::cout << n->data << '\n';
+                }else{
+                    for (int j=0; j < 2*n->nodeLevel; j++){
+                        std::cout << "-";
+                    }
+
+                    std::cout << "[" << n->label << "]";
+                    std::cout << n->data << "\n"; 
+                }
             }
         }
 
@@ -231,10 +232,70 @@ class Tree{
                 }
             }
         }
+        
+        // Creating tree
+        Tree<T> createTree(std::string filename){
+            // Tree
+            Tree<T> newTree;
+            // Create nodelist
+            std::vector<Node<std::string>*> nodeList = getNodeList(filename);
+
+            // addtotree
+            newTree.addRoot(nodeList[0]);
+            for (int i = 0; i<nodeList.size(); i++){
+                Node<std::string>* parent = nodeList[i];
+                newTree.addFromNodeList(parent,nodeList,i);
+            }
+
+            return newTree;
+        }
 
         // Return content of root
         T rootData() const{
             return root->data;
+        }
+
+        // Print contents of a node
+        void printNode(int n){
+            PositionList pl = positions();
+            for (int i=0; i<pl.size(); i++){
+                if (pl[i].getNodeNum() == n){
+                Node<T> *p = pl[i].getNode();
+                
+                // Node details
+                std::cout << "Node's content: " << p->data << "\n";
+                
+                // Ancestor details
+                if (p->nodeLevel == 0){
+                    std::cout << "Ancestor: [NULL] -- Position is root\n";
+                }else if (p->nodeLevel == 1){
+                    std::cout << "Ancestor: " << p->parent->data << "\n";
+                }else{
+                    std::cout << "Ancestor: " << p->parent->parent->data << "\n";
+                }
+
+                // Descendant details
+                if (pl[i].isExternal()){
+                    std::cout << "Descendant: [NULL] -- Position has no children\n";
+                }else{
+                    std::cout << "Descendant: " << p->childList[0]->data << "\n";
+                }
+                
+                // Sibling details
+                if (p->nodeLevel == 0){
+                    std::cout << "Sibling: [NULL] -- Position has no siblings -- Position is root\n\n";
+                    return;
+                }
+                std::vector<Node<T>*> cl = p->parent->childList;
+                for (int j=0; j<cl.size(); j++){
+                    if (cl[j]->nodeNum != p->nodeNum){
+                        std::cout << "Sibling: " << cl[j]->data << "\n\n";
+                        return;
+                    }
+                }
+                std::cout << "Sibling: [NULL] -- Position has no siblings\n\n";
+                }
+            }
         }
 
         // Return number of internal nodes
