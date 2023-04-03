@@ -119,22 +119,25 @@ class Tree{
             return pl;
         }
 
-        // Print details of each node in position list
-        void printPositionList(){
+        // Returns a string with details of each node in position list
+        std::string treeDetails(){
+            std::string output;
             PositionList pl = positions();
             for (int i=0; i<pl.size(); i++){
                 Node<T> *n = pl[i].getNode();
                 if (i==0){
-                    std::cout << n->data << '\n';
+                    output += n->data += '\n';
                 }else{
                     for (int j=0; j < 2*n->nodeLevel; j++){
-                        std::cout << "-";
+                        output += "-";
                     }
 
-                    std::cout << "[" << n->label << "]";
-                    std::cout << n->data << "\n"; 
+                    output += "[" + n->label + "] ";
+                    output += n->data + "\n"; 
                 }
             }
+
+            return output;
         }
 
         // Get list of nodes given a filename
@@ -142,7 +145,9 @@ class Tree{
             // opening file
             std::ifstream myFile;
             myFile.open(filename);
-
+            if (!myFile){
+                std::cout << "File not found! Terminating!\n\n";
+            }
 
             // Variables
             std::string levelStr;
@@ -397,6 +402,47 @@ class Tree{
                 }
             }
             return perfect;
+        }
+
+        /*---------------
+        Is tree balanced?
+        -----------------*/
+
+        // Return subtree height (Only for binary trees)
+        int subtreeHeight(Node<T> *n){
+            if (n->childList.size() == 0){
+                return 0;
+            }
+
+            if (n->childList.size() == 1){
+                return 1 + subtreeHeight(n->childList[0]);
+            }
+
+            return 1 + std::max(subtreeHeight(n->childList[0]),subtreeHeight(n->childList[1]));
+        }
+
+        // is Balanced?
+        bool isBalanced(Node<T>* n) {
+            if (n->childList.size() == 0) {
+                return true;
+            }
+
+            // Calculate subtree heights
+            int left_height,right_height;
+            if (n->childList.size() == 1){
+                int left_height = subtreeHeight(n->childList[0]);
+                int right_height = 0;
+                // Difference of heights
+                return std::abs(left_height - right_height) <= 1;
+            }else{
+                int left_height = subtreeHeight(n->childList[0]);
+                int right_height = subtreeHeight(n->childList[1]);
+                
+                // Difference of heights
+                return std::abs(left_height - right_height) <= 1 && isBalanced(n->childList[0]) && isBalanced(n->childList[1]);
+            }
+
+            
         }
 
 };
