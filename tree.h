@@ -101,7 +101,7 @@ class Tree{
             if (Position(v).isExternal()){
                 return;
             }else{
-                for (int i=0; i<v->childList.size(); i++){
+                for (size_t i=0; i<v->childList.size(); i++){
                     preorder(v->childList[i],pl);
                 }
             }
@@ -130,7 +130,7 @@ class Tree{
         // Print details of each node in position list
         void printPositionList(){
             PositionList pl = positions();
-            for (int i=0; i<pl.size(); i++){
+            for (size_t i=0; i<pl.size(); i++){
                 Node<T> *n = pl[i].getNode();
                 std::cout << n->nodeLevel << "  " << n->nodeNum << "  " << n->label << "   " << n->data << "\n"; 
             }
@@ -189,7 +189,7 @@ class Tree{
             
             // Create possible parents list
             std::vector<Node<T>*> parentList;
-            for (int i=j; i<nodeList.size(); i++){
+            for (size_t i=j; i<nodeList.size(); i++){
                 if (nodeList[i]->nodeLevel == parentNode->nodeLevel){
                     parentList.push_back(nodeList[i]);
                 }
@@ -197,7 +197,7 @@ class Tree{
 
             // Create possible children list
             std::vector<Node<T>*> childrenList;
-            for (int i=0; i<nodeList.size(); i++){
+            for (size_t i=0; i<nodeList.size(); i++){
                 if ((nodeList[i]->nodeLevel == parentNode->nodeLevel+1) && (nodeList[i]->isAdded == false)){
                     childrenList.push_back(nodeList[i]);
                 }
@@ -208,7 +208,7 @@ class Tree{
                 if (childrenList.size() == 0){
                     return;
                 }else{
-                    for (int i = 0; i<childrenList.size(); i++){
+                    for (size_t i = 0; i<childrenList.size(); i++){
                         parentNode->childList.push_back(childrenList[i]);
                         childrenList[i]->parent = parentNode;
                         childrenList[i]->isAdded = true;
@@ -220,7 +220,7 @@ class Tree{
 
             // More than one parent
             int nextParentNum = parentList[1]->nodeNum;
-            for (int i=0; i<childrenList.size(); i++){
+            for (size_t i=0; i<childrenList.size(); i++){
                 if (childrenList[i]->nodeNum > nextParentNum){
                     return;
                 }else{
@@ -241,7 +241,7 @@ class Tree{
         int numInternalNodes(){
             int count = 0;
             PositionList pl = positions();
-            for (int i=0; i<pl.size(); i++){
+            for (size_t i=0; i<pl.size(); i++){
                 if(pl[i].isExternal() == false){
                     count++;
                 }
@@ -254,7 +254,7 @@ class Tree{
         int numExternalNodes(){
             int count = 0;
             PositionList pl = positions();
-            for (int i=0; i<pl.size(); i++){
+            for (size_t i=0; i<pl.size(); i++){
                 if(pl[i].isExternal() == true){
                     count++;
                 }
@@ -267,7 +267,7 @@ class Tree{
         int height(){
             int maxHeight = 0;
             PositionList pl = positions();
-            for (int i=0; i<pl.size(); i++){
+            for (size_t i=0; i<pl.size(); i++){
                 if(pl[i].getNodeLevel() > maxHeight){
                     maxHeight = pl[i].getNodeLevel();
                 }
@@ -280,7 +280,7 @@ class Tree{
         bool isBinary(){
             bool binary = true;
             PositionList pl = positions();
-            for (int i=0; i<pl.size(); i++){
+            for (size_t i=0; i<pl.size(); i++){
                 if (pl[i].getChildren().size() > 2){
                     binary = false;
                     break;
@@ -297,7 +297,7 @@ class Tree{
                 return false;
             }else{
                 PositionList pl = positions();
-                for (int i=0; i<pl.size(); i++){
+                for (size_t i=0; i<pl.size(); i++){
                     if (pl[i].isExternal()){
                         continue;
                     }
@@ -321,14 +321,14 @@ class Tree{
             }else{
                 PositionList pl = positions();
                 int height;
-                for (int i=0; i<pl.size(); i++){
+                for (size_t i=0; i<pl.size(); i++){
                     if (pl[i].isExternal()){
                         height = pl[i].getNodeLevel();
                         break;
                     }
                 }
 
-                for (int i=0; i<pl.size(); i++){
+                for (size_t i=0; i<pl.size(); i++){
                     if (pl[i].isExternal() && pl[i].getNodeLevel() != height){
                         perfect = false;
                         break;

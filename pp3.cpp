@@ -17,7 +17,7 @@ int main(){
     
     // addtotree
     t.addRoot(nodeList[0]);
-    for (int i = 0; i<nodeList.size(); i++){
+    for (size_t i = 0; i<nodeList.size(); i++){
         Node<std::string>* parent = nodeList[i];
         t.addFromNodeList(parent,nodeList,i);
     }
