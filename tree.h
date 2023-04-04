@@ -55,7 +55,10 @@ class Tree{
 
         // Constructor
         Tree(){
-            root = nullptr;
+            root = nullptr;  //"There are zero nodes (including root) in
+            //the tree at this point"
+            //root->parent = nullptr; //make root's parent = NULL
+            //implement this wherever fist (root) node is added
             n = 0;
         }
 
@@ -82,6 +85,7 @@ class Tree{
         // Add root
         void addRoot(Node<T> *newRoot){
             root = newRoot;
+            root->parent = nullptr; // Hardcode: might be problematic 
             n++;
         }
         
@@ -247,7 +251,7 @@ class Tree{
 
             // addtotree
             newTree.addRoot(nodeList[0]);
-            for (int i = 0; i<nodeList.size(); i++){
+            for (size_t i = 0; i<nodeList.size(); i++){
                 Node<std::string>* parent = nodeList[i];
                 newTree.addFromNodeList(parent,nodeList,i);
             }
@@ -263,7 +267,7 @@ class Tree{
         // Print contents of a node
         void printNode(int n){
             PositionList pl = positions();
-            for (int i=0; i<pl.size(); i++){
+            for (size_t i=0; i<pl.size(); i++){
                 if (pl[i].getNodeNum() == n){
                 Node<T> *p = pl[i].getNode();
                 
@@ -292,7 +296,7 @@ class Tree{
                     return;
                 }
                 std::vector<Node<T>*> cl = p->parent->childList;
-                for (int j=0; j<cl.size(); j++){
+                for (size_t j=0; j<cl.size(); j++){
                     if (cl[j]->nodeNum != p->nodeNum){
                         std::cout << "Sibling: " << cl[j]->data << "\n\n";
                         return;

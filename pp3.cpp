@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <fstream>
 #include "tree.h"
 
 int main(){
@@ -11,10 +12,16 @@ int main(){
     Tree<std::string> tree = tree.createTree(filename);
     std::cout << "Tree created!\n";
 
-
+    /*
     // Create output file
+    std::ofstream Ofile; 
+    Ofile.open("about_tree.txt");
+    Ofile << "This is a line of text." << std::endl;
 
     
+    Ofile.close();
+    */
+
     // Interact with tree;
     int MAX_N  = tree.size();
     std::cout << "-----------------\nEXPLORE THE TREE\n-----------------\n\n";
