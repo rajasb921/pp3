@@ -23,12 +23,48 @@ int main()
 
     // Tree Properties
     std::cout << "\n-----------------\nTree Properties\n-----------------\n\n";
+    std::cout << "Root" << tree.rootNode()->data;
+    std::cout << "Number of internal nodes: " << tree.numInternalNodes() << std::endl;
+    std::cout << "Number of external nodes: " << tree.numExternalNodes() << std::endl;
+    std::cout << "Tree height: " << tree.height() << std::endl;
+
+    std::cout << "Internal Nodes: \n";
+
+    std::cout << "External Nodes: \n";
 
     // Binary Tree Properties
     std::cout << "\n-----------------\nBinary Tree Properties\n-----------------\n\n";
+    std::cout << "Binary Tree: ";
+    if (tree.isBinary()){
+        std::cout << "Yes\n";
+        //Proper?
+        std::cout << "Proper Tree: ";
+        if (tree.isProper()){
+            std::cout << "Yes\n";
+        }else{
+            std::cout << "No\n";
+        }
+        //Perfect? 
+        std::cout << "Perfect Tree: ";
+        if (tree.isPerfect()){
+            std::cout << "Yes\n";
+        }else{
+            std::cout << "No\n";
+        }
+        //Balanced?
+        std::cout << "Balanced Tree: ";
+        if (tree.isBalanced(tree.rootNode())){
+            std::cout << "Yes\n";
+        }else{
+            std::cout << "No\n";
+        }
+
+    }else{
+        std::cout << "No\n";
+    }
 
     // Interact with tree;
-    int MAX_N = tree.size();
+    size_t MAX_N = tree.size();
     std::cout << "\n-----------------\nEXPLORE THE TREE\n-----------------\n\n";
 
     bool flag = true;
@@ -46,7 +82,7 @@ int main()
         }
         else
         {
-            int optionNum = std::stoi(option);
+            size_t optionNum = std::stoul(option);
             if (optionNum > MAX_N || optionNum == 0)
             {
                 std::cout << "Invalid Input. Please try again.\n\n";

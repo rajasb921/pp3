@@ -478,6 +478,18 @@ class Tree{
             return s;
         }
 
-};
+        void printInternalNodes(){
+            for (){
+                std::cout << n->data << std::endl;
+            }
+        }
+
+        void printExternalNodes(){
+            for (){
+                std::cout << n->data << std::endl;
+            }
+        }
+
+  };
 
 #endif
