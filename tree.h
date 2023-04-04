@@ -110,7 +110,7 @@ class Tree{
             if (n->childList.size() == 0){
                 return;
             }else{
-                for (int i=0; i<n->childList.size(); i++){
+                for (size_t i=0; i<n->childList.size(); i++){
                     preorderPrint(n->childList[i]);
                 }
             }
@@ -247,12 +247,12 @@ class Tree{
             // Tree
             Tree<T> newTree;
             // Create nodelist
-            std::vector<Node<std::string>*> nodeList = getNodeList(filename);
+            std::vector<Node<T>*> nodeList = getNodeList(filename); //wip string-->T
 
             // addtotree
             newTree.addRoot(nodeList[0]);
             for (size_t i = 0; i<nodeList.size(); i++){
-                Node<std::string>* parent = nodeList[i];
+                Node<T>* parent = nodeList[i]; //wip string-->T
                 newTree.addFromNodeList(parent,nodeList,i);
             }
 
@@ -447,6 +447,35 @@ class Tree{
             }
 
             
+        }
+
+
+        //-------------------FileIO Functions----------------------------//
+
+
+        // Preorder print for output file  
+        std::string preorderPrintTree(Node<T> *n){
+            static std::string s;
+
+            for (int i = 0; i < (n->nodeLevel); ++i){
+                s += "--";
+            }
+
+            if (n->nodeLevel > 0){
+                s += "[" + n->label + "] " + n->data + "\n"; 
+            } else{
+                s += n->data + "\n";
+            }
+
+            if (n->childList.size() == 0){
+                return s;
+            }else{
+                for (size_t i=0; i<n->childList.size(); i++){
+                    preorderPrintTree(n->childList[i]);
+                }
+            }
+
+            return s;
         }
 
 };
