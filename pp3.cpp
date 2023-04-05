@@ -75,7 +75,39 @@ int main()
         std::cout << "No\n";
     }
 
-    // Interact with tree;
+    // Binary Tree Properties: Ofile
+    Ofile << "\n-----------------\nBinary Tree Properties\n-----------------\n\n";
+
+    Ofile << "Binary Tree: ";
+    if (tree.isBinary()){
+        Ofile << "Yes\n";
+        //Proper?
+        Ofile << "Proper Tree: ";
+        if (tree.isProper()){
+            Ofile << "Yes\n";
+        }else{
+            Ofile << "No\n";
+        }
+        //Perfect? 
+        Ofile << "Perfect Tree: ";
+        if (tree.isPerfect()){
+            Ofile << "Yes\n";
+        }else{
+            Ofile << "No\n";
+        }
+        //Balanced?
+        Ofile << "Balanced Tree: ";
+        if (tree.isBalanced(tree.rootNode())){
+            Ofile << "Yes\n";
+        }else{
+            Ofile << "No\n";
+        }
+
+    }else{
+        Ofile << "No\n";
+    }
+
+    // Interact with tree (Terminal Only)
     size_t MAX_N = tree.size();
     std::cout << "\n-----------------\nEXPLORE THE TREE\n-----------------\n\n";
 

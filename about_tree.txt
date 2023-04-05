@@ -25,3 +25,12 @@ Savings account
 Money market fund
 Stock portfolio
 Diversified portfolio with stocks, bonds, and short-term instruments
+
+-----------------
+Binary Tree Properties
+-----------------
+
+Binary Tree: Yes
+Proper Tree: Yes
+Perfect Tree: No
+Balanced Tree: No
