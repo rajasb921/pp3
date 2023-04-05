@@ -52,6 +52,7 @@ class Tree{
         };
 
         typedef std::vector<Position> PositionList;               // List of all positions (stored in preorder)
+        //std::ofstream& operator<<(std::ofstream& ofs) // overload << operator to output to file 
 
         // Constructor
         Tree(){
@@ -478,28 +479,32 @@ class Tree{
             return s;
         }
 
-        void printInternalNodes()
+        std::string internalNodes()
         {
+            std::string s; //*might* need to be static
             PositionList pl = positions();
             for (size_t i=0; i<pl.size(); i++)
             {
                 if(!pl[i].isExternal())
                 {
-                    std::cout << pl[i].getNode()->data << std::endl;
+                    s += pl[i].getNode()->data + "\n";
                 }
             }
+            return s;
         }
 
-        void printExternalNodes()
+        std::string externalNodes()
         {
+            std::string s;//*might* need to be static
             PositionList pl = positions();
             for (size_t i=0; i<pl.size(); i++)
             {
                 if(pl[i].isExternal())
                 {
-                    std::cout << pl[i].getNode()->data << std::endl;
+                    s += pl[i].getNode()->data + "\n";
                 }
             }
+            return s;
         }
 };
 

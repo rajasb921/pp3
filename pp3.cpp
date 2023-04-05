@@ -11,31 +11,41 @@ int main()
     std::cout << "\nEnter the filename of the tree: ";
     std::cin >> filename;
     Tree<std::string> tree = tree.createTree(filename);
-    std::cout << "Tree created!\n";
+    std::cout << "Tree created!\n\n";
 
-    // Create output file + output contents in terminal
+    // Write + Output Formatted Tree Preorder
     std::ofstream Ofile;
     Ofile.open("about_tree.txt");
-    std::string printTreePosition = tree.preorderPrintTree(tree.rootNode());
-    Ofile << printTreePosition;
-    std::cout << printTreePosition;
-    Ofile.close();
 
-    // Tree Properties
+    std::string tempBuff = tree.preorderPrintTree(tree.rootNode());
+    Ofile << tempBuff; //Ofile
+    std::cout << tempBuff; //cout
+
+    // Tree Properties: cout 
     std::cout << "\n-----------------\nTree Properties\n-----------------\n\n";
     std::cout << "Root: " << tree.rootNode()->data << std::endl;
     std::cout << "Number of internal nodes: " << tree.numInternalNodes() << std::endl;
     std::cout << "Number of external nodes: " << tree.numExternalNodes() << std::endl;
     std::cout << "Tree height: " << tree.height() << std::endl;
 
-    std::cout << "\nInternal Nodes: \n";
-    tree.printInternalNodes();
+    std::cout << "\nInternal Nodes: \n" << tree.internalNodes();
 
-    std::cout << "\nExternal Nodes: \n";
-    tree.printExternalNodes();
+    std::cout << "\nExternal Nodes: \n" << tree.externalNodes();
 
-    // Binary Tree Properties
+    // Tree Properties: Ofile
+    Ofile << "\n-----------------\nTree Properties\n-----------------\n\n";
+    Ofile << "Root: " << tree.rootNode()->data << std::endl;
+    Ofile << "Number of internal nodes: " << tree.numInternalNodes() << std::endl;
+    Ofile << "Number of external nodes: " << tree.numExternalNodes() << std::endl;   
+    Ofile << "Tree height: " << tree.height() << std::endl;                          
+
+    Ofile << "\nInternal Nodes: \n" << tree.internalNodes();
+
+    Ofile << "\nExternal Nodes: \n" << tree.externalNodes();
+    
+    // Binary Tree Properties: cout 
     std::cout << "\n-----------------\nBinary Tree Properties\n-----------------\n\n";
+
     std::cout << "Binary Tree: ";
     if (tree.isBinary()){
         std::cout << "Yes\n";
@@ -95,6 +105,7 @@ int main()
             }
         }
     }
-
+    
+    Ofile.close();
     return 0;
 }
