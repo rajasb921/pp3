@@ -16,21 +16,23 @@ int main()
     // Create output file + output contents in terminal
     std::ofstream Ofile;
     Ofile.open("about_tree.txt");
-    std::string printTree = tree.preorderPrintTree(tree.rootNode());
-    Ofile << printTree;
-    std::cout << printTree;
+    std::string printTreePosition = tree.preorderPrintTree(tree.rootNode());
+    Ofile << printTreePosition;
+    std::cout << printTreePosition;
     Ofile.close();
 
     // Tree Properties
     std::cout << "\n-----------------\nTree Properties\n-----------------\n\n";
-    std::cout << "Root" << tree.rootNode()->data;
+    std::cout << "Root: " << tree.rootNode()->data << std::endl;
     std::cout << "Number of internal nodes: " << tree.numInternalNodes() << std::endl;
     std::cout << "Number of external nodes: " << tree.numExternalNodes() << std::endl;
     std::cout << "Tree height: " << tree.height() << std::endl;
 
-    std::cout << "Internal Nodes: \n";
+    std::cout << "\nInternal Nodes: \n";
+    tree.printInternalNodes();
 
-    std::cout << "External Nodes: \n";
+    std::cout << "\nExternal Nodes: \n";
+    tree.printExternalNodes();
 
     // Binary Tree Properties
     std::cout << "\n-----------------\nBinary Tree Properties\n-----------------\n\n";

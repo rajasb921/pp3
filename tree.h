@@ -310,7 +310,7 @@ class Tree{
         // Return number of internal nodes
         int numInternalNodes(){
             int count = 0;
-            PositionList pl = positions();
+            PositionList pl = this->positions();
             for (size_t i=0; i<pl.size(); i++){
                 if(pl[i].isExternal() == false){
                     count++;
@@ -478,18 +478,29 @@ class Tree{
             return s;
         }
 
-        void printInternalNodes(){
-            for (){
-                std::cout << n->data << std::endl;
+        void printInternalNodes()
+        {
+            PositionList pl = positions();
+            for (size_t i=0; i<pl.size(); i++)
+            {
+                if(!pl[i].isExternal())
+                {
+                    std::cout << pl[i].getNode()->data << std::endl;
+                }
             }
         }
 
-        void printExternalNodes(){
-            for (){
-                std::cout << n->data << std::endl;
+        void printExternalNodes()
+        {
+            PositionList pl = positions();
+            for (size_t i=0; i<pl.size(); i++)
+            {
+                if(pl[i].isExternal())
+                {
+                    std::cout << pl[i].getNode()->data << std::endl;
+                }
             }
         }
-
-  };
+};
 
 #endif
