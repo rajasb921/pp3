@@ -435,13 +435,13 @@ class Tree{
             // Calculate subtree heights
             int left_height,right_height;
             if (n->childList.size() == 1){
-                int left_height = subtreeHeight(n->childList[0]);
-                int right_height = 0;
+                left_height = subtreeHeight(n->childList[0]);
+                right_height = 0;
                 // Difference of heights
                 return std::abs(left_height - right_height) <= 1;
             }else{
-                int left_height = subtreeHeight(n->childList[0]);
-                int right_height = subtreeHeight(n->childList[1]);
+                left_height = subtreeHeight(n->childList[0]);
+                right_height = subtreeHeight(n->childList[1]);
                 
                 // Difference of heights
                 return std::abs(left_height - right_height) <= 1 && isBalanced(n->childList[0]) && isBalanced(n->childList[1]);
