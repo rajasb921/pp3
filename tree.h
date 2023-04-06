@@ -474,7 +474,7 @@ class Tree{
         //Return string of all internal nodes (separated by CR)
         std::string internalNodes()
         {
-            std::string s; //*might* need to be static
+            std::string s;
             PositionList pl = positions();
             for (size_t i=0; i<pl.size(); i++)
             {
@@ -489,7 +489,7 @@ class Tree{
         //Return string of all external nodes (separated by CR)
         std::string externalNodes()
         {
-            std::string s;//*might* need to be static
+            std::string s;
             PositionList pl = positions();
             for (size_t i=0; i<pl.size(); i++)
             {
