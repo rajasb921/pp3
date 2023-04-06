@@ -52,28 +52,24 @@ class Tree{
         };
 
         typedef std::vector<Position> PositionList;               // List of all positions (stored in preorder)
-        //std::ofstream& operator<<(std::ofstream& ofs) // overload << operator to output to file 
 
-        // Constructor
+        // Constructor for Tree
         Tree(){
-            root = nullptr;  //"There are zero nodes (including root) in
-            //the tree at this point"
-            //root->parent = nullptr; //make root's parent = NULL
-            //implement this wherever fist (root) node is added
+            root = nullptr;
             n = 0;
         }
 
-        // Get size
+        // Return size of tree
         int size(){
             return n;
         }
 
-        // is Empty?
+        // Returns trie if tree is empty 
         bool isEmpty(){
             return size() == 0;
         }
 
-        // Return position of root
+        // Return Position of root
         Position rootPosition() const{
             return Position(root);
         }
@@ -83,10 +79,10 @@ class Tree{
             return root;
         }
 
-        // Add root
+        // Add/set root node
         void addRoot(Node<T> *newRoot){
             root = newRoot;
-            root->parent = nullptr; // Hardcode: might be problematic 
+            root->parent = nullptr;
             n++;
         }
         
@@ -104,7 +100,7 @@ class Tree{
             }
         }
 
-        // Preorder print
+        // Prints the tree in preorder
         void preorderPrint(Node<T> *n){
             std::cout << n->nodeLevel << "  " << n->nodeNum << "  " << n->label << "   " << n->data << "\n";
 
@@ -196,7 +192,7 @@ class Tree{
            ALGORITHM TO CREATE TREE FROM NODELIST
            --------------------------------------*/
 
-        void addFromNodeList (Node<T>* parentNode , std::vector<Node<T>*> nodeList , int j){
+        void addFromNodeList (Node<T>* parentNode, std::vector<Node<T>*> nodeList , int j){
             
             // Create possible parents list
             std::vector<Node<T>*> parentList;
@@ -243,24 +239,24 @@ class Tree{
             }
         }
         
-        // Creating tree
+        // Constructs tree
         Tree<T> createTree(std::string filename){
             // Tree
             Tree<T> newTree;
             // Create nodelist
-            std::vector<Node<T>*> nodeList = getNodeList(filename); //wip string-->T
+            std::vector<Node<T>*> nodeList = getNodeList(filename); 
 
             // addtotree
             newTree.addRoot(nodeList[0]);
             for (size_t i = 0; i<nodeList.size(); i++){
-                Node<T>* parent = nodeList[i]; //wip string-->T
+                Node<T>* parent = nodeList[i]; 
                 newTree.addFromNodeList(parent,nodeList,i);
             }
 
             return newTree;
         }
 
-        // Return content of root
+        // Return content of root's data
         T rootData() const{
             return root->data;
         }
@@ -347,7 +343,7 @@ class Tree{
             return maxHeight;
         }
 
-        // is Binary?
+        // Returns true if tree is binary 
         bool isBinary(){
             bool binary = true;
             PositionList pl = positions();
@@ -361,7 +357,7 @@ class Tree{
         }
 
 
-        // is Proper?
+        // Returns true if tree is proper
         bool isProper(){
             bool proper = true;
             if (isBinary() == false){
@@ -382,7 +378,7 @@ class Tree{
             return proper;
         }
 
-        // is Perfect?
+        // Returns true if tree is perfect 
         bool isPerfect(){
             bool perfect = true;
             if (isBinary() == false){
@@ -409,10 +405,6 @@ class Tree{
             return perfect;
         }
 
-        /*---------------
-        Is tree balanced?
-        -----------------*/
-
         // Return subtree height (Only for binary trees)
         int subtreeHeight(Node<T> *n){
             if (n->childList.size() == 0){
@@ -426,7 +418,7 @@ class Tree{
             return 1 + std::max(subtreeHeight(n->childList[0]),subtreeHeight(n->childList[1]));
         }
 
-        // is Balanced?
+        // Returns true if tree is balanced
         bool isBalanced(Node<T>* n) {
             if (n->childList.size() == 0) {
                 return true;
@@ -454,7 +446,7 @@ class Tree{
         //-------------------FileIO Functions----------------------------//
 
 
-        // Preorder print for output file  
+        // Return string of preorder print for output file  
         std::string preorderPrintTree(Node<T> *n){
             static std::string s;
 
@@ -479,6 +471,7 @@ class Tree{
             return s;
         }
 
+        //Return string of all internal nodes (separated by CR)
         std::string internalNodes()
         {
             std::string s; //*might* need to be static
@@ -493,6 +486,7 @@ class Tree{
             return s;
         }
 
+        //Return string of all external nodes (separated by CR)
         std::string externalNodes()
         {
             std::string s;//*might* need to be static
